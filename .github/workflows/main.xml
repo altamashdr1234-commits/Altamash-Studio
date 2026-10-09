@@ -1,0 +1,36 @@
+name: Build Altamash Studio APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Create Flutter Android project
+        run: |
+          flutter create --platforms=android --project-name altamash_studio app
+          cp pubspec.yaml app/pubspec.yaml
+          cp -r lib app/lib
+          cd app
+          flutter pub get
+          flutter build apk --release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Altamash-Studio-APK
+          path: app/build/app/outputs/flutter-apk/app-release.apk
