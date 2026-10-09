@@ -2,7 +2,9 @@
 
 name: Build Altamash Studio APK
 
-on:
+'on':
+
+
   workflow_dispatch:
   push:
     branches:
